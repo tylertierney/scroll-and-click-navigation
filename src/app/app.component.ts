@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
       .pipe(withLatestFrom(this.elementRefs$))
       .subscribe(([fragment, elementRefs]) => {
         if (fragment in elementRefs) {
-          const el = elementRefs[fragment]?.nativeElement as HTMLElement;
+          const el = elementRefs[fragment].nativeElement;
           el.scrollIntoView({ behavior: 'smooth' });
         }
       });
