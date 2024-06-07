@@ -73,14 +73,16 @@ export class AppComponent implements OnInit {
 
   activatedRoute = inject(ActivatedRoute);
 
-  fragment$ = this.activatedRoute.fragment.pipe(filter(Boolean));
+  fragment$: Observable<string> = this.activatedRoute.fragment.pipe(
+    filter(Boolean)
+  );
 
-  mainElement$ = this.mainElementSubject.pipe(
+  mainElement$: Observable<HTMLDivElement> = this.mainElementSubject.pipe(
     filter(Boolean),
     map((el) => el.nativeElement)
   );
 
-  scroll$ = this.mainElement$.pipe(
+  scroll$: Observable<Event> = this.mainElement$.pipe(
     switchMap((mainElement) => fromEvent<Event>(mainElement, 'scroll'))
   );
 
@@ -92,9 +94,7 @@ export class AppComponent implements OnInit {
 
       for (const [name, element] of Object.entries(elementRefs)) {
         const nativeElement = element.nativeElement;
-
         const { height } = nativeElement.getBoundingClientRect();
-
         if (nativeElement.offsetTop + height >= scrollPosition + 20) {
           return name;
         }
@@ -112,25 +112,5 @@ export class AppComponent implements OnInit {
           el.scrollIntoView({ behavior: 'smooth' });
         }
       });
-
-    // this.scroll$
-    //   .pipe(
-    //     switchMap(() => this.mainElement$),
-    //     withLatestFrom(this.elementRefs$)
-    //   )
-    //   .subscribe(([mainElement, elementRefs]) => {
-    //     const scrollPosition = mainElement.scrollTop;
-
-    //     for (const [name, element] of Object.entries(elementRefs)) {
-    //       const nativeElement = element.nativeElement;
-
-    //       const { height } = nativeElement.getBoundingClientRect();
-
-    //       if (nativeElement.offsetTop + height >= scrollPosition + 20) {
-    //         console.log(name);
-    //         break;
-    //       }
-    //     }
-    //   });
   }
 }
