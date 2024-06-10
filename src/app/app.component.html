@@ -27,7 +27,7 @@
   </ul>
 </nav>
 
-<main #mainElement>
+<main #mainElement [formGroup]="formGroup">
   <section
     id="firstThing"
     #firstThing
@@ -35,6 +35,10 @@
     class="placeholder"
   >
     <p>firstThing</p>
+    <label>
+      Name
+      <input type="text" formControlName="name" />
+    </label>
   </section>
 
   <section
@@ -44,6 +48,10 @@
     class="placeholder"
   >
     <p>secondThing</p>
+    <label>
+      Favorite Color
+      <input type="text" formControlName="favoriteColor" />
+    </label>
   </section>
 
   <section
@@ -53,5 +61,9 @@
     class="placeholder"
   >
     <p>thirdThing</p>
+    <label>
+      City
+      <input type="text" formControlName="city" />
+    </label>
   </section>
 </main>

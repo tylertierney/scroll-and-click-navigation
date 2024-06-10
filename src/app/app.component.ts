@@ -26,13 +26,14 @@ import {
 } from 'rxjs';
 import { routes } from './app.routes';
 import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -113,4 +114,10 @@ export class AppComponent implements OnInit {
         }
       });
   }
+
+  formGroup = new FormGroup({
+    name: new FormControl<string>('', { nonNullable: true }),
+    favoriteColor: new FormControl<string>('', { nonNullable: true }),
+    city: new FormControl<string>('', { nonNullable: true }),
+  });
 }

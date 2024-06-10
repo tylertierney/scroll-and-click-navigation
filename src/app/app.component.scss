@@ -55,6 +55,7 @@
     height: 100vh;
     overflow-y: auto;
     padding: 1rem;
+    scroll-snap-type: y;
 
     .placeholder {
       min-height: 800px;
@@ -64,6 +65,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      scroll-snap-align: start;
     }
   }
 }
