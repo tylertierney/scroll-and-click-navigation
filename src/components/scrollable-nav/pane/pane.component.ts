@@ -5,11 +5,11 @@ import { Component, ElementRef, Input } from '@angular/core';
   template: `<ng-content></ng-content>`,
   standalone: true,
   imports: [],
-  host: { style: 'min-height: 100%' },
+  styleUrls: ['./pane.component.scss'],
 })
 export class PaneComponent {
   constructor(public elem: ElementRef) {}
-  // @Input({ required: true }) urlFragment = '';
+
   @Input({ required: true }) label = '';
   @Input({ required: true }) id = '';
 }

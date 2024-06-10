@@ -25,7 +25,7 @@ import {
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PaneComponent } from './pane.component';
+import { PaneComponent } from './pane/pane.component';
 
 type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
 
@@ -47,42 +47,6 @@ export class ScrollableNavComponent {
     this.mainElementSubject.next(vc);
   }
 
-  // firstThingSubject = new ReplaySubject<ElementRef<HTMLParagraphElement>>(1);
-  // @ViewChild('firstThing', { read: ElementRef }) set firstThing(
-  //   vc: ElementRef<HTMLParagraphElement>
-  // ) {
-  //   this.firstThingSubject.next(vc);
-  // }
-
-  // secondThingSubject = new ReplaySubject<ElementRef<HTMLParagraphElement>>(1);
-  // @ViewChild('secondThing', { read: ElementRef }) set secondThing(
-  //   vc: ElementRef<HTMLParagraphElement>
-  // ) {
-  //   this.secondThingSubject.next(vc);
-  // }
-
-  // thirdThingSubject = new ReplaySubject<ElementRef<HTMLParagraphElement>>(1);
-  // @ViewChild('thirdThing', { read: ElementRef }) set thirdThing(
-  //   vc: ElementRef<HTMLParagraphElement>
-  // ) {
-  //   this.thirdThingSubject.next(vc);
-  // }
-
-  // elementRefs$: Observable<ElementRefMap> = combineLatest({
-  //   firstThing: this.firstThingSubject,
-  //   secondThing: this.secondThingSubject,
-  //   thirdThing: this.thirdThingSubject,
-  // });
-
-  // private paneElementRefsSubject = new ReplaySubject<
-  //   QueryList<ElementRef<PaneComponent>>
-  // >(1);
-  // @ContentChildren(PaneComponent, { read: ElementRef }) set _paneElementRefs(
-  //   children: QueryList<ElementRef<PaneComponent>>
-  // ) {
-  //   this.paneElementRefsSubject.next(children);
-  // }
-
   private paneComponentsSubject = new ReplaySubject<QueryList<PaneComponent>>(
     1
   );
@@ -92,8 +56,8 @@ export class ScrollableNavComponent {
     this.paneComponentsSubject.next(children);
   }
 
-  private panes$ = this.paneComponentsSubject.pipe(
-    map((queryList) => queryList.map((x) => x))
+  panes$ = this.paneComponentsSubject.pipe(
+    map((queryList) => queryList.toArray())
   );
 
   activatedRoute = inject(ActivatedRoute);
@@ -113,7 +77,7 @@ export class ScrollableNavComponent {
 
   currentScrolledElement$ = this.scroll$.pipe(
     switchMap(() => this.mainElement$),
-    withLatestFrom(this.panes$),
+    withLatestFrom(this.paneComponentsSubject),
 
     map(([mainElement, panes]) => {
       const scrollPosition = mainElement.scrollTop;
@@ -126,27 +90,19 @@ export class ScrollableNavComponent {
           return id;
         }
       }
+
       return '';
     })
   );
 
   ngOnInit(): void {
-    // this.fragment$
-    //   .pipe(withLatestFrom(this.elementRefs$))
-    //   .subscribe(([fragment, elementRefs]) => {
-    //     if (fragment in elementRefs) {
-    //       const el = elementRefs[fragment]?.nativeElement;
-    //       el?.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    //   });
-    // this.fragment$.pipe(
-    //   withLatestFrom(this.pan)
-    // )
+    this.fragment$
+      .pipe(withLatestFrom(this.panes$))
+      .subscribe(([fragment, panes]) => {
+        const foundPane = panes.find(({ id }) => id === fragment);
+        if (!foundPane) return;
+        const el = foundPane.elem.nativeElement;
+        el.scrollIntoView({ behavior: 'smooth' });
+      });
   }
-
-  formGroup = new FormGroup({
-    name: new FormControl<string>('', { nonNullable: true }),
-    favoriteColor: new FormControl<string>('', { nonNullable: true }),
-    city: new FormControl<string>('', { nonNullable: true }),
-  });
 }
