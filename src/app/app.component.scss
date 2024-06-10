@@ -1,71 +1,16 @@
 :host {
+  height: 100vh;
   display: flex;
-  position: relative;
+}
 
-  nav {
-    display: flex;
-    flex-direction: column;
-    left: 0;
-    top: 0;
-    border-right: 1px solid rgb(47, 22, 22);
+pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-
-      li.nav-item {
-        display: flex;
-        cursor: pointer;
-        position: relative;
-
-        a {
-          display: flex;
-          padding: 0.75rem 1rem;
-          flex-grow: 1;
-          text-decoration: none;
-          color: inherit;
-        }
-
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.039);
-        }
-
-        &.active {
-          color: blue;
-          ::before {
-            content: "";
-            background-color: green;
-            height: 100%;
-            width: 4px;
-            background: lightblue;
-            position: absolute;
-            left: 0;
-            top: 0;
-          }
-        }
-      }
-    }
-  }
-
-  main {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    height: 100vh;
-    overflow-y: auto;
-    padding: 1rem;
-    scroll-snap-type: y;
-
-    .placeholder {
-      min-height: 800px;
-      width: 100%;
-      background: pink;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      scroll-snap-align: start;
-    }
-  }
+label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }

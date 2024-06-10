@@ -1,0 +1,18 @@
+<nav>
+  <ul>
+    @for(pane of (panes$ | async); track $index) {
+    <li
+      [ngClass]="{
+        active: (currentScrolledElement$ | async) === pane.id
+      }"
+      class="nav-item"
+    >
+      <a [routerLink]="['/']" [fragment]="pane.id">{{ pane.label }}</a>
+    </li>
+    }
+  </ul>
+</nav>
+
+<main #mainElement>
+  <ng-content></ng-content>
+</main>

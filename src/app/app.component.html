@@ -1,69 +1,24 @@
-<nav>
-  <ul>
-    <li
-      [ngClass]="{
-        active: (currentScrolledElement$ | async) === 'firstThing'
-      }"
-      class="nav-item"
-    >
-      <a [routerLink]="['/']" fragment="firstThing">firstThing</a>
-    </li>
-    <li
-      [ngClass]="{
-        active: (currentScrolledElement$ | async) === 'secondThing'
-      }"
-      class="nav-item"
-    >
-      <a [routerLink]="['/']" fragment="secondThing">secondThing</a>
-    </li>
-    <li
-      [ngClass]="{
-        active: (currentScrolledElement$ | async) === 'thirdThing'
-      }"
-      class="nav-item"
-    >
-      <a [routerLink]="['/']" fragment="thirdThing">thirdThing</a>
-    </li>
-  </ul>
-</nav>
-
-<main #mainElement [formGroup]="formGroup">
-  <section
-    id="firstThing"
-    #firstThing
-    style="background: pink"
-    class="placeholder"
-  >
-    <p>firstThing</p>
+<scrollable-nav [formGroup]="formGroup">
+  <pane style="background: pink" label="First Thing" id="firstThing">
     <label>
-      Name
+      Name:
       <input type="text" formControlName="name" />
     </label>
-  </section>
-
-  <section
-    id="secondThing"
-    #secondThing
-    style="background: lightgreen"
-    class="placeholder"
-  >
-    <p>secondThing</p>
+  </pane>
+  <pane style="background: lightgreen" label="Second Thing" id="secondThing">
     <label>
-      Favorite Color
+      Favorite Color:
       <input type="text" formControlName="favoriteColor" />
     </label>
-  </section>
-
-  <section
+  </pane>
+  <pane
+    style="background: rgb(255, 255, 205)"
+    label="Third Thing"
     id="thirdThing"
-    #thirdThing
-    style="background: rgb(255, 255, 201)"
-    class="placeholder"
   >
-    <p>thirdThing</p>
     <label>
-      City
+      City:
       <input type="text" formControlName="city" />
     </label>
-  </section>
-</main>
+  </pane>
+</scrollable-nav>
