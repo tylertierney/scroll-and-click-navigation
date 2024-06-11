@@ -1,9 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   inject,
   Input,
@@ -12,22 +10,16 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
 import {
-  combineLatest,
   filter,
   fromEvent,
   map,
   Observable,
-  of,
   ReplaySubject,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PaneComponent } from './pane/pane.component';
-
-type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
 
 @Component({
   selector: 'scrollable-nav',
@@ -35,11 +27,9 @@ type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
   styleUrls: ['./scrollable-nav.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule],
+  imports: [RouterOutlet, RouterModule, CommonModule],
 })
 export class ScrollableNavComponent {
-  @Input() navItems: string[] = [];
-
   mainElementSubject = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
   @ViewChild('mainElement', { read: ElementRef }) set mainElement(
     vc: ElementRef<HTMLDivElement>
