@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  cursor: pointer;
+  position: relative;
+
+  a {
+    display: flex;
+    padding: 0.75rem 1rem;
+    flex-grow: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.039);
+  }
+
+  &.active {
+    color: blue;
+    ::before {
+      content: "";
+      height: 100%;
+      width: 4px;
+      background: lightblue;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+}

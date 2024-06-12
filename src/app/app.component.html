@@ -1,34 +1,17 @@
-<scrollable-nav [formGroup]="formGroup">
-  <pane style="background: pink" label="First Thing" id="firstThing">
-    <label>
-      Name:
-      <input type="text" formControlName="name" />
-    </label>
+<scrollable-nav>
+  <nav-item id="firstThing">First Thing 😀</nav-item>
+  <nav-item id="secondThing">Second Thing</nav-item>
+  <nav-item id="thirdThing">Third Thing</nav-item>
+  <nav-item id="fourthThing">Fourth Thing</nav-item>
+  <nav-item id="fifthThing">Fifth Thing</nav-item>
+
+  <pane style="background: pink" id="firstThing"> First Thing </pane>
+  <pane style="background: lightgreen" id="secondThing"> Second Thing </pane>
+  <pane style="background: rgb(255, 255, 205)" id="thirdThing">
+    Third Thing
   </pane>
-  <pane style="background: lightgreen" label="Second Thing" id="secondThing">
-    <label>
-      Favorite Color:
-      <input type="text" formControlName="favoriteColor" />
-    </label>
-  </pane>
-  <pane
-    style="background: rgb(255, 255, 205)"
-    label="Third Thing"
-    id="thirdThing"
-  >
-    <label>
-      City:
-      <input type="text" formControlName="city" />
-    </label>
-  </pane>
-  <pane label="Fourth Thing" id="fourthThing" style="background: lightblue">
-    Fourth Thing</pane
-  >
-  <pane
-    label="Fifth Thing"
-    id="fifthThing"
-    style="background: rgb(255, 199, 94)"
-  >
+  <pane id="fourthThing" style="background: lightblue"> Fourth Thing</pane>
+  <pane id="fifthThing" style="background: rgb(255, 199, 94)">
     Fifth Thing</pane
   >
 </scrollable-nav>

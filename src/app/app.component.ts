@@ -29,6 +29,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ScrollableNavComponent } from '../components/scrollable-nav/scrollable-nav.component';
 import { PaneComponent } from '../components/scrollable-nav/pane/pane.component';
+import { NavItemComponent } from '../components/scrollable-nav/nav-item/nav-item.component';
 
 type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
 
@@ -43,6 +44,7 @@ type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
     ScrollableNavComponent,
     NgFor,
     PaneComponent,
+    NavItemComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
