@@ -10,6 +10,5 @@ import { Component, ElementRef, Input } from '@angular/core';
 export class PaneComponent {
   constructor(public elem: ElementRef) {}
 
-  @Input({ required: true }) label = '';
   @Input({ required: true }) id = '';
 }

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   inject,
   Input,
@@ -10,16 +11,21 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
 import {
+  combineLatest,
   filter,
   fromEvent,
   map,
   Observable,
   ReplaySubject,
   switchMap,
+  takeUntil,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PaneComponent } from './pane/pane.component';
+import { NavItemComponent } from './nav-item/nav-item.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'scrollable-nav',
@@ -27,7 +33,7 @@ import { PaneComponent } from './pane/pane.component';
   styleUrls: ['./scrollable-nav.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [RouterOutlet, RouterModule, CommonModule, NavItemComponent],
 })
 export class ScrollableNavComponent {
   mainElementSubject = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
@@ -68,7 +74,6 @@ export class ScrollableNavComponent {
   currentScrolledElement$ = this.scroll$.pipe(
     switchMap(() => this.mainElement$),
     withLatestFrom(this.paneComponentsSubject),
-
     map(([mainElement, panes]) => {
       const scrollPosition = mainElement.scrollTop;
 
@@ -85,14 +90,38 @@ export class ScrollableNavComponent {
     })
   );
 
+  private navItemComponents = new ReplaySubject<QueryList<NavItemComponent>>(1);
+  @ContentChildren(NavItemComponent) set _navItemComponents(
+    children: QueryList<NavItemComponent>
+  ) {
+    this.navItemComponents.next(children);
+  }
+
+  destroyRef = inject(DestroyRef);
+
   ngOnInit(): void {
     this.fragment$
-      .pipe(withLatestFrom(this.panes$))
+      .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
       .subscribe(([fragment, panes]) => {
         const foundPane = panes.find(({ id }) => id === fragment);
         if (!foundPane) return;
         const el = foundPane.elem.nativeElement;
         el.scrollIntoView({ behavior: 'smooth' });
+      });
+
+    combineLatest([
+      this.currentScrolledElement$,
+      this.navItemComponents.pipe(map((navItems) => navItems.toArray())),
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([currentScrolledId, navItems]) => {
+        navItems.forEach(({ id, elem }) => {
+          if (id === currentScrolledId) {
+            elem.nativeElement.classList.add('active');
+          } else {
+            elem.nativeElement.classList.remove('active');
+          }
+        });
       });
   }
 }
