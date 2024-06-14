@@ -5,21 +5,19 @@ import {
   DestroyRef,
   ElementRef,
   inject,
-  Input,
   QueryList,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
 import {
   combineLatest,
+  debounceTime,
   filter,
   fromEvent,
   map,
   Observable,
   ReplaySubject,
   switchMap,
-  takeUntil,
-  tap,
   withLatestFrom,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -68,6 +66,7 @@ export class ScrollableNavComponent {
   );
 
   scroll$: Observable<Event> = this.mainElement$.pipe(
+    debounceTime(250),
     switchMap((mainElement) => fromEvent<Event>(mainElement, 'scroll'))
   );
 
@@ -100,6 +99,7 @@ export class ScrollableNavComponent {
   destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
+    // On click of a nav-item, scroll to the associated pane
     this.fragment$
       .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
       .subscribe(([fragment, panes]) => {
@@ -109,6 +109,8 @@ export class ScrollableNavComponent {
         el.scrollIntoView({ behavior: 'smooth' });
       });
 
+    // Add the active class to the nav-item associated with
+    // the currently-scrolled pane
     combineLatest([
       this.currentScrolledElement$,
       this.navItemComponents.pipe(map((navItems) => navItems.toArray())),
