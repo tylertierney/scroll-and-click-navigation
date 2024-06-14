@@ -5,6 +5,7 @@ import {
   DestroyRef,
   ElementRef,
   inject,
+  Input,
   QueryList,
   ViewChild,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import {
   map,
   Observable,
   ReplaySubject,
+  Subject,
   switchMap,
   withLatestFrom,
 } from 'rxjs';
@@ -24,6 +26,16 @@ import { CommonModule } from '@angular/common';
 import { PaneComponent } from './pane/pane.component';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+export const scrollToPaneGivenAnId = ([fragment, panes]: [
+  string,
+  Array<PaneComponent>
+]): void => {
+  const foundPane = panes.find(({ id }) => id === fragment);
+  if (!foundPane) return;
+  const el = foundPane.elem.nativeElement;
+  el.scrollIntoView({ behavior: 'smooth' });
+};
 
 @Component({
   selector: 'scrollable-nav',
@@ -34,6 +46,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [RouterOutlet, RouterModule, CommonModule, NavItemComponent],
 })
 export class ScrollableNavComponent {
+  destroyRef = inject(DestroyRef);
+
   mainElementSubject = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
   @ViewChild('mainElement', { read: ElementRef }) set mainElement(
     vc: ElementRef<HTMLDivElement>
@@ -53,6 +67,13 @@ export class ScrollableNavComponent {
   panes$ = this.paneComponentsSubject.pipe(
     map((queryList) => queryList.toArray())
   );
+
+  private navItemComponents = new ReplaySubject<QueryList<NavItemComponent>>(1);
+  @ContentChildren(NavItemComponent) set _navItemComponents(
+    children: QueryList<NavItemComponent>
+  ) {
+    this.navItemComponents.next(children);
+  }
 
   activatedRoute = inject(ActivatedRoute);
 
@@ -89,26 +110,11 @@ export class ScrollableNavComponent {
     })
   );
 
-  private navItemComponents = new ReplaySubject<QueryList<NavItemComponent>>(1);
-  @ContentChildren(NavItemComponent) set _navItemComponents(
-    children: QueryList<NavItemComponent>
-  ) {
-    this.navItemComponents.next(children);
-  }
+  @Input() useUrlFragment = true;
 
-  destroyRef = inject(DestroyRef);
+  navItemClickedSubject = new Subject<string>();
 
   ngOnInit(): void {
-    // On click of a nav-item, scroll to the associated pane
-    this.fragment$
-      .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
-      .subscribe(([fragment, panes]) => {
-        const foundPane = panes.find(({ id }) => id === fragment);
-        if (!foundPane) return;
-        const el = foundPane.elem.nativeElement;
-        el.scrollIntoView({ behavior: 'smooth' });
-      });
-
     // Add the active class to the nav-item associated with
     // the currently-scrolled pane
     combineLatest([
@@ -125,5 +131,29 @@ export class ScrollableNavComponent {
           }
         });
       });
+
+    // On click of a nav-item, scroll to the associated pane
+    if (this.useUrlFragment) {
+      //
+      // Changes to the url fragment trigger the scroll
+      this.fragment$
+        .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
+        .subscribe(scrollToPaneGivenAnId);
+    } else {
+      //
+      // Clicks on nav-items trigger the scroll
+      this.navItemComponents.subscribe((navItems) => {
+        navItems.toArray().forEach((navItem) => {
+          navItem.useUrlFragment = false;
+          navItem.elem.nativeElement.addEventListener('click', () => {
+            this.navItemClickedSubject.next(navItem.id);
+          });
+        });
+      });
+
+      this.navItemClickedSubject
+        .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
+        .subscribe(scrollToPaneGivenAnId);
+    }
   }
 }

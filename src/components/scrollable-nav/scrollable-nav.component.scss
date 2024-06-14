@@ -7,11 +7,9 @@
   nav {
     display: flex;
     flex-direction: column;
-    left: 0;
-    top: 0;
     border-right: 1px solid rgb(47, 22, 22);
     max-height: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     ul {
       list-style-type: none;

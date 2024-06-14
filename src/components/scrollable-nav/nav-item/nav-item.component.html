@@ -1,3 +1,12 @@
-<a [routerLink]="['/']" [fragment]="id">
+<a
+  *ngIf="useUrlFragment; else noUrlFragment"
+  [routerLink]="['/']"
+  [fragment]="useUrlFragment ? id : ''"
+>
   <ng-content></ng-content>
 </a>
+<ng-template #noUrlFragment>
+  <a [routerLink]="['/']">
+    <ng-content></ng-content>
+  </a>
+</ng-template>

@@ -1,37 +1,14 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import {
-  ActivatedRoute,
-  Router,
-  RouterModule,
-  RouterOutlet,
-} from '@angular/router';
-import {
-  combineLatest,
-  filter,
-  from,
-  fromEvent,
-  map,
-  Observable,
-  ReplaySubject,
-  scan,
-  switchMap,
-  withLatestFrom,
-} from 'rxjs';
-import { routes } from './app.routes';
+import { Component, ElementRef } from '@angular/core';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule, NgFor } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ScrollableNavComponent } from '../components/scrollable-nav/scrollable-nav.component';
 import { PaneComponent } from '../components/scrollable-nav/pane/pane.component';
 import { NavItemComponent } from '../components/scrollable-nav/nav-item/nav-item.component';
 
-type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
+const randomUpTo255 = () => {
+  return Math.floor(Math.random() * 256);
+};
 
 @Component({
   selector: 'app-root',
@@ -50,9 +27,19 @@ type ElementRefMap = Record<string, ElementRef<HTMLDivElement>>;
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  formGroup = new FormGroup({
-    name: new FormControl<string>('', { nonNullable: true }),
-    favoriteColor: new FormControl<string>('', { nonNullable: true }),
-    city: new FormControl<string>('', { nonNullable: true }),
-  });
+  // randomNumber = ~~(Math.random() * 30) + 2;
+  randomNumber = 9;
+
+  navItems: { id: string }[] = new Array(this.randomNumber)
+    .fill(null)
+    .map((_, i) => ({
+      id: String(i),
+    }));
+
+  panes: { id: string; color: string }[] = new Array(this.randomNumber)
+    .fill(null)
+    .map((_, i) => ({
+      id: String(i),
+      color: `rgb(${randomUpTo255()}, ${randomUpTo255()}, ${randomUpTo255()})`,
+    }));
 }
