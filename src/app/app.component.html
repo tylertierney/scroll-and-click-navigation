@@ -1,26 +1,13 @@
 <scrollable-nav [useUrlFragment]="false">
-  <!-- <nav-item id="first">First Thing 😀</nav-item>
-  <nav-item id="second">Second Thing</nav-item>
-  <nav-item id="third">Third Thing</nav-item>
-  <nav-item id="fourth">Fourth Thing</nav-item>
-  <nav-item id="fifth">Fifth Thing</nav-item>
-  <nav-item id="sixth">Sixth Thing</nav-item>
+  @for (navItem of navItems; track $index) {
+    <nav-item [id]="navItem.id">
+      <div style="display: flex; gap: 1rem; flex-wrap: nowrap">
+        Nav Item #{{ navItem.id }}
+      </div>
+    </nav-item>
+  }
 
-  <pane id="first" style="background: pink">First Thing</pane>
-  <pane id="second" style="background: lightgreen"> Second Thing </pane>
-  <pane id="third" style="background: cornsilk"> Third Thing </pane>
-  <pane id="fourth" style="background: lightblue"> Fourth Thing</pane>
-  <pane id="fifth" style="background: peachpuff"> Fifth Thing</pane> -->
-  @for(navItem of navItems; track $index) {
-  <nav-item [id]="navItem.id">
-    <div style="display: flex; gap: 1rem; flex-wrap: nowrap">
-      <!-- <span>Nav #{{ navItem.id }}</span> -->
-      Nav Item #{{ navItem.id }}
-    </div>
-    <!-- First Thing -->
-    <!-- Nav &#35;{{ navItem.id }} -->
-  </nav-item>
-  } @for(pane of panes; track $index) {
-  <pane [id]="pane.id" [style.background]="pane.color">{{ pane.id }}</pane>
+  @for (pane of panes; track $index) {
+    <pane [id]="pane.id" [style.background]="pane.color">{{ pane.id }}</pane>
   }
 </scrollable-nav>

@@ -27,8 +27,7 @@ const randomUpTo255 = () => {
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  // randomNumber = ~~(Math.random() * 30) + 2;
-  randomNumber = 9;
+  randomNumber = ~~(Math.random() * 30) + 2;
 
   navItems: { id: string }[] = new Array(this.randomNumber)
     .fill(null)

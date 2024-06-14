@@ -134,14 +134,14 @@ export class ScrollableNavComponent {
 
     // On click of a nav-item, scroll to the associated pane
     if (this.useUrlFragment) {
-      //
-      // Changes to the url fragment trigger the scroll
+      // Changes to the url fragment will trigger the scroll
       this.fragment$
         .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
         .subscribe(scrollToPaneGivenAnId);
     } else {
       //
-      // Clicks on nav-items trigger the scroll
+      // Apply click handlers to nav-items +
+      // manually set the useUrlFragment input value
       this.navItemComponents.subscribe((navItems) => {
         navItems.toArray().forEach((navItem) => {
           navItem.useUrlFragment = false;
@@ -151,6 +151,7 @@ export class ScrollableNavComponent {
         });
       });
 
+      // Clicks on nav-items will trigger the scroll
       this.navItemClickedSubject
         .pipe(withLatestFrom(this.panes$), takeUntilDestroyed(this.destroyRef))
         .subscribe(scrollToPaneGivenAnId);
