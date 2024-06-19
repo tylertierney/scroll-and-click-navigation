@@ -1,17 +1,13 @@
-<scrollable-nav>
-  <nav-item id="firstThing">First Thing 😀</nav-item>
-  <nav-item id="secondThing">Second Thing</nav-item>
-  <nav-item id="thirdThing">Third Thing</nav-item>
-  <nav-item id="fourthThing">Fourth Thing</nav-item>
-  <nav-item id="fifthThing">Fifth Thing</nav-item>
+<scrollable-nav [useUrlFragment]="false">
+  @for (navItem of navItems; track $index) {
+    <nav-item [id]="navItem.id">
+      <div style="display: flex; gap: 1rem; flex-wrap: nowrap">
+        Nav Item #{{ navItem.id }}
+      </div>
+    </nav-item>
+  }
 
-  <pane style="background: pink" id="firstThing"> First Thing </pane>
-  <pane style="background: lightgreen" id="secondThing"> Second Thing </pane>
-  <pane style="background: rgb(255, 255, 205)" id="thirdThing">
-    Third Thing
-  </pane>
-  <pane id="fourthThing" style="background: lightblue"> Fourth Thing</pane>
-  <pane id="fifthThing" style="background: rgb(255, 199, 94)">
-    Fifth Thing</pane
-  >
+  @for (pane of panes; track $index) {
+    <pane [id]="pane.id" [style.background]="pane.color">{{ pane.id }}</pane>
+  }
 </scrollable-nav>
